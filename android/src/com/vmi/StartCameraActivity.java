@@ -2,16 +2,13 @@ package com.vmi;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v4.app.ActivityCompat;  //Does not work, but i can try to run my app without it
+import android.support.v4.content.FileProvider;  //How to "include" this in Android Qt?
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,9 +20,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class StartCameraActivity extends AppCompatActivity {
 
-    private static final String TAG = AppCompatActivity.class.getName();
+public class StartCameraActivity extends Activity {
+
+    private static final String TAG = Activity.class.getName();
     public String lastCameraFileUri;
     static final int REQUEST_OPEN_CAMERA =1;
     static final int REQUEST_PERMISSIONS = 2;
@@ -33,12 +31,11 @@ public class StartCameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
         Log.d(TAG, "getApplicationContext().getPackageName()!!: " + getApplicationContext().getPackageName());
-        Log.d(TAG, "SDK version is: " + Build.VERSION.SDK_INT);
-        Log.d(TAG, "Applicationid  is: " + BuildConfig.APPLICATION_ID);
 
+        /*
         //THIS IS ONLY ALLOWED IN PROTOTYPE SOFTWARE, in a real release on Google Play you have to handle
         //permissions if the user presses DENY.
         String[] permissions = {Manifest.permission.CAMERA,
@@ -47,14 +44,7 @@ public class StartCameraActivity extends AppCompatActivity {
                 Manifest.permission.RECORD_AUDIO};
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS);
-
-        final Button callCameraBtn = findViewById(R.id.callCameraButton);
-        callCameraBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                dispatchTakePictureIntent();
-
-            }
-        });
+*/
 
     }
     //Denna anropas alltid när en activity är typ klar. Den funkar osm ett slot i QT.
@@ -65,7 +55,7 @@ public class StartCameraActivity extends AppCompatActivity {
             Log.d(TAG,"We arrived to read the file");
             Log.d(TAG,"This should be the lastCameraFileUri: "+ lastCameraFileUri);
             //och vad gör männskann här. När hen har fått tillbaka en bild. Jo
-            setPic();
+
         } else if (requestCode == REQUEST_PERMISSIONS) {
             Log.d(TAG, "permission jox har körts");
         }
@@ -91,7 +81,7 @@ public class StartCameraActivity extends AppCompatActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 //The getApplicationContext().getPackageName() should return com.vmi;
-                android.net.Uri photoURI = FileProvider.getUriForFile(this,
+                Uri photoURI = FileProvider.getUriForFile(this,
                         getApplicationContext().getPackageName() + ".fileprovider",
                         photoFile);
                 lastCameraFileUri = photoFile.toString();
@@ -122,68 +112,4 @@ public class StartCameraActivity extends AppCompatActivity {
         return image;
     }
 
-    private void setPic() {
-        Log.d(TAG, "This is lastCameraFileUri: "+lastCameraFileUri);
-        ImageView mImageView = findViewById(R.id.imageView1);
-        // Get the dimensions of the View
-        int targetW = mImageView.getWidth();
-        int targetH = mImageView.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(lastCameraFileUri, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(lastCameraFileUri, bmOptions);
-        mImageView.setImageBitmap(bitmap);
-    }
-
-
-    public void startService(View view){
-        Log.d(TAG,"start pressed");
-
-        Intent intent = new Intent(this,  TheCameraService.class);
-        startService(intent);
-    }
-
-    public void stopService(View view) {
-        Log.d(TAG,"STOP pressed");
-
-        Intent intent = new Intent(this,  TheCameraService.class);
-        stopService(intent);
-    }
-
-    public void openSecondActivity(View view){
-
-        Intent intent = new Intent(this, SecondActivity.class);
-        startActivity(intent);
-
-    }
-
-    public void listActivities(View view) {
-
-
-        PackageManager pManager = this.getPackageManager();
-        String packageName = this.getApplicationContext().getPackageName();
-
-        try {
-            ActivityInfo[] list = pManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES).activities;
-            for (ActivityInfo activityInfo : list) {
-                Log.d(TAG, "ActivityInfo = " + activityInfo.name);
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
 }

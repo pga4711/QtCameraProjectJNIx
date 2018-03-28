@@ -60,10 +60,9 @@
             <meta-data android:name="android.app.extract_android_style" android:value="full"/>
             <!-- extract android style -->
     </activity>
-    <activity
-        android:name=".ActivityX"
-        android:theme="@android:style/Theme.NoDisplay">
-    </activity>
+    <activity android:name=".ActivityX" android:theme="@android:style/Theme.NoDisplay" android:label="-- %%INSERT_APP_NAME%% --">
+    <meta-data android:name="android.app.lib_name" android:value="-- %%INSERT_APP_LIB_NAME%% --"/>
+        </activity>
 
     <!-- For adding service(s) please check: https://wiki.qt.io/AndroidServices -->
 
@@ -81,4 +80,6 @@
     <!-- %%INSERT_FEATURES -->
 
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 </manifest>
