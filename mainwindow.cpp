@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     startCamera();
+    qDebug()<<"TEST";
 }
 
 MainWindow::~MainWindow()
