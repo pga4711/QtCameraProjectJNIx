@@ -33,7 +33,7 @@ void MainWindow::startCamera()
         QAndroidJniObject param2 = QAndroidJniObject::fromString("com.vmi.cameratester.StartCameraActivity");
 
 
-        qDebug()<<"Before intent2";
+
         QAndroidJniObject intent2("android/content/Intent", "(Ljava/lang/String;)V", param2.object<jstring>());
 
         if (intent2.isValid())
