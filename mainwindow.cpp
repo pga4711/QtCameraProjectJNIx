@@ -37,8 +37,21 @@ void MainWindow::startCamera()
         QAndroidJniObject param1 = QAndroidJniObject::fromString("com.vmi.cameratester");
         QAndroidJniObject param2 = QAndroidJniObject::fromString("com.vmi.cameratester.StartCameraActivity");
 
+
+
         //Problem here?
         QAndroidJniObject intent2("android/content/Intent", "(Ljava/lang/String;)V", param2.object<jstring>());
+
+
+        qDebug()<<"getAction: "<<intent2.callObjectMethod<jstring>("getAction").toString();
+
+
+
+        QAndroidJniObject o = intent2.callObjectMethod("resolveActivity","(Landroid/content/pm/PackageManager;)Landroid/content/ComponentName");
+
+        qDebug()<<"resolveActivity: "<<o.toString();
+
+        //resolveactivity?
 
         if (intent2.isValid())
         {
