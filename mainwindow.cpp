@@ -31,15 +31,22 @@ void MainWindow::startCamera()
                                                                  "()Landroid/content/pm/PackageManager;");
 
     QAndroidJniObject qtnativeActivity =
-            QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative",
-                                                      "activity",
-                                                      "()Landroid/app/Activity;");
+            QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative", //temporär Import+QtNative...
+                                                      "activity", //anropar activity-metoden
+                                                      "()Landroid/app/Activity;"); //Vi får tillbaka en Activity.
 
 
     if (qtnativeActivity.isValid())
     {
         qDebug()<<"qtnativeActivity is valid";
         //QAndroidJniObject intent("android/content/Intent", "()V");
+
+
+        QAndroidJniObject gotClass = qtnativeActivity.callObjectMethod("getClass",
+                                                                       "()Ljava/lang/Class;");
+        QAndroidJniObject gotClassName = gotClass.callObjectMethod("getName", "()Ljava/lang/String;");
+        qDebug()<<"This is qtnativeActivity class name: " << gotClassName.toString();
+
 
         QAndroidJniObject param1 = QAndroidJniObject::fromString("com.vmi");
         QAndroidJniObject param2 = QAndroidJniObject::fromString("com.vmi.StartCameraActivity");
@@ -69,11 +76,19 @@ void MainWindow::startCamera()
     }
     else
     {
-    qDebug()<<"qtnativeActivity is NOT valid";
+        qDebug()<<"qtnativeActivity is NOT valid";
     }
+
+
     if (mainActivity.isValid())
     {
         qDebug()<<"mainactivity is valid";
+        QAndroidJniObject gotClass = mainActivity.callObjectMethod("getClass",
+                                                                       "()Ljava/lang/Class;");
+        QAndroidJniObject gotClassName = gotClass.callObjectMethod("getName", "()Ljava/lang/String;");
+        qDebug()<<"This is mainActivity classname: " << gotClassName.toString();
+
+
     }
     else
     {
