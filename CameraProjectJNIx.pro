@@ -44,7 +44,7 @@ DISTFILES += \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
-    android/src/com/vmi/StartCameraActivity.java
+    android/src/com/vmi/cameratester/StartCameraActivity.java
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

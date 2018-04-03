@@ -1,4 +1,4 @@
-package com.vmi;
+package com.vmi.cameratester;
 
 import android.Manifest;
 import android.content.Intent;
@@ -6,8 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-//import android.support.v4.app.ActivityCompat;  //Does not work, but i can try to run my app without it
-import android.support.v4.content.FileProvider;  //How to "include" this in Android Qt?
+import android.support.v4.content.FileProvider;  //In gradle you need compile 'com.android.support:support-v4:25.3.1'
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,17 +33,6 @@ public class StartCameraActivity extends Activity {
         //setContentView(R.layout.activity_main);
 
         Log.d(TAG, "getApplicationContext().getPackageName()!!: " + getApplicationContext().getPackageName());
-
-        /*
-        //THIS IS ONLY ALLOWED IN PROTOTYPE SOFTWARE, in a real release on Google Play you have to handle
-        //permissions if the user presses DENY.
-        String[] permissions = {Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.RECORD_AUDIO};
-
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS);
-*/
 
     }
     //Denna anropas alltid när en activity är typ klar. Den funkar osm ett slot i QT.
