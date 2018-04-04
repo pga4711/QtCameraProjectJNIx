@@ -20,6 +20,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::startCamera()
 {
+    //Foo
     //om ihåg: Method signatures are written as "(Arguments)ReturnType"
 
     QAndroidJniObject mainActivity = QtAndroid::androidActivity();
