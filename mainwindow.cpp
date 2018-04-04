@@ -4,13 +4,15 @@
 #include <QtAndroid>
 #include <QAndroidJniObject>
 #include <QAndroidJniEnvironment>
+#include <CameraControllerX.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    startCamera();
+
+    invokeCCX();
 }
 
 MainWindow::~MainWindow()
@@ -18,7 +20,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::startCamera()
+void MainWindow::invokeCCX()
+{
+    ccx->callPhilipsActivityStarter();
+}
+
+
+void MainWindow::startCameraBAD()
 {
     //Foo
     //om ihåg: Method signatures are written as "(Arguments)ReturnType"

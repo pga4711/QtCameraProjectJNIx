@@ -25,10 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    CameraControllerX.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    CameraControllerX.h
 
 FORMS += \
         mainwindow.ui

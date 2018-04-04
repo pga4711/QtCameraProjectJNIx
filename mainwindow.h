@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <CameraControllerX.h>
 
 namespace Ui {
 class MainWindow;
@@ -14,10 +15,13 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void invokeCCX();
 
 private:
     Ui::MainWindow *ui;
-    void startCamera();
+    CameraControllerX *ccx = new CameraControllerX();
+
+    void startCameraBAD();
 
 };
 

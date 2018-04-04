@@ -60,7 +60,7 @@
             <meta-data android:name="android.app.extract_android_style" android:value="full"/>
             <!-- extract android style -->
     </activity>
-    <activity android:name=".StartCameraActivity" android:theme="@android:style/Theme.NoDisplay" android:label="ActivityIdontKnow">
+    <activity android:name="com.vmi.cameratester.StartCameraActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:label="ActivityIdontKnow">
 
     <meta-data android:name="android.app.lib_name" android:value="CameraProjectJNIx"/>
         </activity>

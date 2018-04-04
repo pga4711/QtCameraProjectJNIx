@@ -7,7 +7,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;  //In gradle you need compile 'com.android.support:support-v4:25.3.1'
-import android.app.Activity;
+//import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,16 +19,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+//public class StartCameraActivity extends Activity {
 
-public class StartCameraActivity extends Activity {
-
-    private static final String TAG = Activity.class.getName();
+//com.vmi.cameratester.StartCameraActivity
+public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtActivity {
+    private static final String TAG = StartCameraActivity.class.getName();
     public String lastCameraFileUri;
     static final int REQUEST_OPEN_CAMERA =1;
     static final int REQUEST_PERMISSIONS = 2;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
@@ -43,6 +44,7 @@ public class StartCameraActivity extends Activity {
             Log.d(TAG,"We arrived to read the file");
             Log.d(TAG,"This should be the lastCameraFileUri: "+ lastCameraFileUri);
             //och vad gör männskann här. När hen har fått tillbaka en bild. Jo
+            Log.d(TAG, "If we arrive here, we could focus on how to make use of uri");
 
         } else if (requestCode == REQUEST_PERMISSIONS) {
             Log.d(TAG, "permission jox har körts");
