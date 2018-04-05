@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 //public class StartCameraActivity extends Activity {
 
@@ -34,6 +35,10 @@ public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtAc
         //setContentView(R.layout.activity_main);
 
         Log.d(TAG, "getApplicationContext().getPackageName()!!: " + getApplicationContext().getPackageName());
+
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+        Log.d(TAG, "All threads: "+threadArray);
 
     }
     //Denna anropas alltid när en activity är typ klar. Den funkar osm ett slot i QT.
