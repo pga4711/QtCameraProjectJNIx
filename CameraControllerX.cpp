@@ -18,13 +18,6 @@ void CameraControllerX::callPhilipsActivityStarter()
 
     QAndroidJniObject action = QAndroidJniObject::fromString("com.vmi.cameratester.StartCameraActivity");
 
-    /*
-    QAndroidJniObject intent1=QAndroidJniObject("android/content/Intent","(Ljava/lang/String;)V",
-                                               action.object<jstring>());
-    //VAD SKA JAG HA HÄR?
-
-    QtAndroid::startActivity(intent1, PHILIP_PHOTO, this);
-    */
 
     QAndroidJniObject intent2=QAndroidJniObject("android/content/Intent","()V");
 
@@ -35,8 +28,8 @@ void CameraControllerX::callPhilipsActivityStarter()
                             className.object<jstring>());
 
 
-
     //VAD SKA JAG HA HÄR?
+    qDebug()<<"Before startActivity";
 
     QtAndroid::startActivity(intent2, PHILIP_PHOTO, this);
 
