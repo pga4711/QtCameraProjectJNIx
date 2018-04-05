@@ -21,7 +21,6 @@ private:
     Ui::MainWindow *ui;
     CameraControllerX *ccx = new CameraControllerX();
 
-    void startCameraBAD();
 
 };
 

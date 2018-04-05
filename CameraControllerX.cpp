@@ -10,13 +10,12 @@
 
 void CameraControllerX::callPhilipsActivityStarter()
 {
+
     //Gör en intent som ska starta StartCameraActivity.
     //Android brukar vela ha var den är och vilket package den ligger i.
 
     int PHILIP_PHOTO = 2;
     qDebug()<<"Inside activity";
-
-    QAndroidJniObject action = QAndroidJniObject::fromString("com.vmi.cameratester.StartCameraActivity");
 
 
     QAndroidJniObject intent2=QAndroidJniObject("android/content/Intent","()V");
@@ -40,6 +39,82 @@ void CameraControllerX::callExternalCamera()
 {
 #ifdef Q_OS_ANDROID
 
+
+    //Gör så att man kan använda uri  och file och sådär:
+    QAndroidJniObject builder = QAndroidJniObject("android/os/StrictMode$VmPolicy$Builder", "()V");
+    QAndroidJniObject in_vmpolicy = builder.callObjectMethod("build",
+                                                             "()Landroid/os/StrictMode$VmPolicy;");
+    //QAndroidJniObject::callStaticObjectMethod("klassens namn som vi ska operera på",
+    //   "metodens namn", "(Argument1;Argument2;...)Returvärde", "invärde?");
+    QAndroidJniObject::callStaticMethod<void>("android/os/StrictMode",
+                                              "setVmPolicy",
+                                              "(Landroid/os/StrictMode$VmPolicy;)V",
+                                              in_vmpolicy.object<jobject>() );
+
+    // Grant permissions
+
+    // To prevent java.lang.SecurityException: Permission Denial:
+    // starting Intent { act=android.media.action.IMAGE_CAPTURE
+    // flg=0x3 cmp=org.codeaurora.snapcam/com.android.camera.PhotoCamera
+    // clip={text/uri-list U:file:///storage/emulated/0/camera.jpg} (has extras) }
+    // from ProcessRecord{dd1e705 5630:com.vmi.cameratester/u0a250} (pid=5630, uid=10250) with revoked permission android.permission.CAMERA
+
+
+
+
+
+    QAndroidJniObject permCamStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
+                                                                           "CAMERA",
+                                                                           "Ljava/lang/String;");
+
+    /*
+    QAndroidJniEnvironment jniEnv;
+
+    jobject localRef = jniEnv->GetObjectArrayElement(array, index);
+    QAndroidJniObject element = QAndroidJniObject::fromLocalRef(localRef);
+    */
+
+    QAndroidJniObject permWriteExtStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
+                                                                           "WRITE_EXTERNAL_STORAGE",
+                                                                           "Ljava/lang/String;");
+    QAndroidJniEnvironment env;
+
+    jint permWriteExtStr_length = permWriteExtStr.callMethod<jint>("lenght");
+
+    jclass permWriteExtStr_length_class = env->FindClass("java/lang/String");
+
+
+    //jobjectArray NewObjectArray(jsize length, jclass elementClass, jobject initialElement)
+
+
+    //Java:  String[] strArray = new String[2];
+    jobjectArray strArray = env->NewObjectArray(2, permWriteExtStr_length_class, NULL);
+
+    //??I might continue here some time
+    //env->SetObjectArrayElement();
+
+
+    //QAndroidJniObject permStrArr = QAndroidJniObject
+
+
+    qDebug()<<"This is returned: "<<permCamStr.toString();
+    qDebug()<<"This is returned: "<<permWriteExtStr.toString();
+
+
+
+
+    /*
+    QAndroidJniObject permStrArr =
+
+    java.lang.String[] permissions = {android.Manifest.permission.CAMERA,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.RECORD_AUDIO};
+
+            android.support.v4.app.ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS);
+
+    */
+
     // Philips smuts:
 
      QAndroidJniObject mainActivity = QtAndroid::androidActivity();
@@ -47,6 +122,8 @@ void CameraControllerX::callExternalCamera()
      QAndroidJniObject gotClassName = gotClass.callObjectMethod("getName", "()Ljava/lang/String;");
      qDebug()<<"This is mainActivity !! classname: " << gotClassName.toString();
 
+
+    //Everything down below is from: https://github.com/minixxie/examples/tree/master/qt-for-mobile
 	//android.provider.MediaStore.EXTRA_OUTPUT
 	QAndroidJniObject MediaStore__EXTRA_OUTPUT
             = QAndroidJniObject::getStaticObjectField(
