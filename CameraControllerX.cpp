@@ -28,7 +28,7 @@ void CameraControllerX::callPhilipsActivityStarter()
 
 
     //VAD SKA JAG HA HÄR?
-    qDebug()<<"Before startActivity";
+    qDebug()<<"Before startActivity intent2.."; //Test for commiting, is my git crashing?
 
     QtAndroid::startActivity(intent2, PHILIP_PHOTO, this);
 
