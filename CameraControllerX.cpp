@@ -8,6 +8,7 @@
 
 #include <QDebug>
 
+
 void CameraControllerX::callPhilipsActivityStarter()
 {
     //Creating an intent that are going to start StartCameraActivity.
@@ -36,8 +37,6 @@ void CameraControllerX::callExternalCamera()
     QAndroidJniObject builder = QAndroidJniObject("android/os/StrictMode$VmPolicy$Builder", "()V");
     QAndroidJniObject in_vmpolicy = builder.callObjectMethod("build",
                                                              "()Landroid/os/StrictMode$VmPolicy;");
-    //QAndroidJniObject::callStaticObjectMethod("klassens namn som vi ska operera på",
-    //   "metodens namn", "(Argument1;Argument2;...)Returvärde", "invärde?");
     QAndroidJniObject::callStaticMethod<void>("android/os/StrictMode",
                                               "setVmPolicy",
                                               "(Landroid/os/StrictMode$VmPolicy;)V",
@@ -53,86 +52,21 @@ void CameraControllerX::callExternalCamera()
 
 
 
-    QAndroidJniEnvironment env;
-
-    QAndroidJniObject JNIpermCamStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
+    QString permCamStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
                                                                            "CAMERA",
-                                                                           "Ljava/lang/String;");
+                                                                           "Ljava/lang/String;").toString();
 
-    QString QTpermCamStr = JNIpermCamStr.toString();
-    //jstring = permCamStr.object()<jstring>;
 
-    /*
-    QAndroidJniEnvironment jniEnv;
-
-    jobject localRef = jniEnv->GetObjectArrayElement(array, index);
-    QAndroidJniObject element = QAndroidJniObject::fromLocalRef(localRef);
-    */
-
-    QAndroidJniObject JNIpermWriteExtStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
+    QString permWriteExtStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
                                                                            "WRITE_EXTERNAL_STORAGE",
-                                                                           "Ljava/lang/String;");
-    QString QTpermWriteExtStr = JNIpermWriteExtStr.toString();
+                                                                           "Ljava/lang/String;").toString();
 
-    //jint permWriteExtStr_length = permWriteExtStr.callMethod<jint>("lenght");
+    QStringList strArray;
+    strArray.append(permCamStr);
+    strArray.append(permWriteExtStr);
+    qDebug()<<"strArray!!: "<<strArray;
 
-    jclass strClass = env->FindClass("java/lang/String");
-
-
-    //jobjectArray NewObjectArray(jsize length, jclass elementClass, jobject initialElement)
-
-
-    //Java:  String[] strArray = new String[2];
-    jobjectArray strArray = env->NewObjectArray(2, strClass, NULL);
-
-    //??I might continue here some time
-    env->SetObjectArrayElement(strArray, 0, JNIpermWriteExtStr.object<jstring>());
-    env->SetObjectArrayElement(strArray, 1, JNIpermCamStr.object<jstring>());
-
-    //QAndroidJniObject permStrArr = QAndroidJniObject
-
-
-    qDebug()<<"This is returned: "<<JNIpermCamStr.toString();
-    qDebug()<<"This is returned: "<<JNIpermWriteExtStr.toString();
-    QAndroidJniObject::callStaticObjectMethod("java/util/Arrays", "toString", "([Ljava/lang/Object;)Ljava/lang/String;", strArray).toString();
-
-    qDebug()<<"This is array   : "<<
-              QAndroidJniObject::callStaticObjectMethod("java/util/Arrays",
-                                                        "toString",
-                                                        "([Ljava/lang/Object;)Ljava/lang/String;", strArray).toString();
-
-
-
-
-    QStringList QTstrArray;
-    QTstrArray.append(QTpermCamStr);
-    QTstrArray.append(QTpermWriteExtStr);
-
-    qDebug()<<"QTstrArray;!!! : "<< QTstrArray;
-
-    QtAndroid::requestPermissions(QTstrArray, nullptr); //Very bad to insert nullptr. But is a fulhack
-
-
-    /*
-    QAndroidJniObject::callStaticObjectMethod("android/support/v4/app/ActivityCompat",
-                                   "getReferrer",
-                                   "(Landroid/app/Activity;[Ljava/lang/String;I)",
-                                   this, strArray, 17);
-    */
-
-
-    /*
-    QAndroidJniObject permStrArr =
-
-    java.lang.String[] permissions = {android.Manifest.permission.CAMERA,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.RECORD_AUDIO};
-
-            android.support.v4.app.ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS);
-
-    */
-
+    QtAndroid::requestPermissions(strArray, nullptr); //Very bad to insert nullptr. But is a fulhack
 
 
     //Everything down below is from: https://github.com/minixxie/examples/tree/master/qt-for-mobile

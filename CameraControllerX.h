@@ -20,9 +20,10 @@ public: //getters/setters
 	const QString& imagePath() const { return this->m_imagePath; }
 
 public:
+
     void callPhilipsActivityStarter();
 
-	void callExternalCamera();
+	void callExternalCamera();    
 
 signals:
 	void imagePathChanged();

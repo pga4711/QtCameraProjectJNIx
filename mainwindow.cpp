@@ -18,10 +18,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setCCX(CameraControllerX inCcx)
+{
+    //ccxFromMain=inCcx;//pass the reference i think is good
+}
+
 void MainWindow::invokeCCX()
 {
-    ccx->callPhilipsActivityStarter(); //Calls a "pure" Android-java-"file".
-    //ccx->callExternalCamera(); //Too cluttery, too error prone right now?
+    ccx->callPhilipsActivityStarter();
+
+    //ccxFromMain.callExternalCamera();
+    //i can not do these yet, i forgot how it works with pointers and ampersand and references:
+    //ccxFromMain->callExternalCamera();
 }
 
 void MainWindow::on_triggerActivityBtn_clicked()
