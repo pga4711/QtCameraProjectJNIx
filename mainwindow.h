@@ -17,6 +17,9 @@ public:
     ~MainWindow();
     void invokeCCX();
 
+private slots:
+    void on_triggerActivityBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     CameraControllerX *ccx = new CameraControllerX();

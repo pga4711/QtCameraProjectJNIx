@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    invokeCCX();
+
 }
 
 MainWindow::~MainWindow()
@@ -25,4 +25,9 @@ void MainWindow::invokeCCX()
 {
     ccx->callPhilipsActivityStarter(); //Calls a "pure" Android-java-"file".
     //ccx->callExternalCamera();
+}
+
+void MainWindow::on_triggerActivityBtn_clicked()
+{
+    invokeCCX();
 }

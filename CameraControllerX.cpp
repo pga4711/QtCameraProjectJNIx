@@ -62,10 +62,12 @@ void CameraControllerX::callExternalCamera()
 
 
 
+    QAndroidJniEnvironment env;
 
     QAndroidJniObject permCamStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
                                                                            "CAMERA",
                                                                            "Ljava/lang/String;");
+    //jstring = permCamStr.object()<jstring>;
 
     /*
     QAndroidJniEnvironment jniEnv;
@@ -77,30 +79,63 @@ void CameraControllerX::callExternalCamera()
     QAndroidJniObject permWriteExtStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
                                                                            "WRITE_EXTERNAL_STORAGE",
                                                                            "Ljava/lang/String;");
-    QAndroidJniEnvironment env;
 
-    jint permWriteExtStr_length = permWriteExtStr.callMethod<jint>("lenght");
 
-    jclass permWriteExtStr_length_class = env->FindClass("java/lang/String");
+    //jint permWriteExtStr_length = permWriteExtStr.callMethod<jint>("lenght");
+
+    jclass strClass = env->FindClass("java/lang/String");
 
 
     //jobjectArray NewObjectArray(jsize length, jclass elementClass, jobject initialElement)
 
 
     //Java:  String[] strArray = new String[2];
-    jobjectArray strArray = env->NewObjectArray(2, permWriteExtStr_length_class, NULL);
+    jobjectArray strArray = env->NewObjectArray(2, strClass, NULL);
 
     //??I might continue here some time
-    //env->SetObjectArrayElement();
-
+    env->SetObjectArrayElement(strArray, 0, permWriteExtStr.object<jstring>());
+    env->SetObjectArrayElement(strArray, 1, permCamStr.object<jstring>());
 
     //QAndroidJniObject permStrArr = QAndroidJniObject
 
 
     qDebug()<<"This is returned: "<<permCamStr.toString();
     qDebug()<<"This is returned: "<<permWriteExtStr.toString();
+    QAndroidJniObject::callStaticObjectMethod("java/util/Arrays", "toString", "([Ljava/lang/Object;)Ljava/lang/String;", strArray).toString();
+
+    qDebug()<<"This is array   : "<<
+              QAndroidJniObject::callStaticObjectMethod("java/util/Arrays",
+                                                        "toString",
+                                                        "([Ljava/lang/Object;)Ljava/lang/String;", strArray).toString();
+
+    //Hur anropar man getClass, getName på this
+    qDebug()<<"this-objectname"<<this->objectName();
+
+    QAndroidJniObject mainActivity = QtAndroid::androidActivity();
+    QAndroidJniObject gotClass = mainActivity.callObjectMethod("getClass", "()Ljava/lang/Class;");
+    QAndroidJniObject gotClassName = gotClass.callObjectMethod("getName", "()Ljava/lang/String;");
+
+    qDebug()<<"This is mainActivity !! classname: " << gotClassName.toString();
+
+    //Kolla vad this är för objekt
+    //jobject =
+
+    qDebug()<<"BEFOREstatic";
+    QAndroidJniObject::callStaticMethod<void>("android/support/v4/app/ActivityCompat",
+                                   "requestPermissions",
+                                   "(Landroid/app/Activity;[Ljava/lang/String;I)V",
+                                   this, strArray, 17);
+    qDebug()<<"AFTERstatic";
 
 
+
+
+    /*
+    QAndroidJniObject::callStaticObjectMethod("android/support/v4/app/ActivityCompat",
+                                   "getReferrer",
+                                   "(Landroid/app/Activity;[Ljava/lang/String;I)",
+                                   this, strArray, 17);
+    */
 
 
     /*
@@ -115,12 +150,6 @@ void CameraControllerX::callExternalCamera()
 
     */
 
-    // Philips smuts:
-
-     QAndroidJniObject mainActivity = QtAndroid::androidActivity();
-     QAndroidJniObject gotClass = mainActivity.callObjectMethod("getClass", "()Ljava/lang/Class;");
-     QAndroidJniObject gotClassName = gotClass.callObjectMethod("getName", "()Ljava/lang/String;");
-     qDebug()<<"This is mainActivity !! classname: " << gotClassName.toString();
 
 
     //Everything down below is from: https://github.com/minixxie/examples/tree/master/qt-for-mobile
@@ -131,7 +160,7 @@ void CameraControllerX::callExternalCamera()
     qDebug() << "MediaStore__EXTRA_OUTPUT.isValid()=" << MediaStore__EXTRA_OUTPUT.isValid();
 
 	QAndroidJniObject action = QAndroidJniObject::fromString("android.media.action.IMAGE_CAPTURE");
-	QAndroidJniObject intent=QAndroidJniObject("android/content/Intent","(Ljava/lang/String;)V",
+    QAndroidJniObject intent=QAndroidJniObject("android/content/Intent","(Ljava/lang/String;)V",
 											   action.object<jstring>());
     qDebug() << __FUNCTION__ << "intent.isValid()=" << intent.isValid();
 
