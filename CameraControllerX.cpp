@@ -55,9 +55,11 @@ void CameraControllerX::callExternalCamera()
 
     QAndroidJniEnvironment env;
 
-    QAndroidJniObject permCamStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
+    QAndroidJniObject JNIpermCamStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
                                                                            "CAMERA",
                                                                            "Ljava/lang/String;");
+
+    QString QTpermCamStr = JNIpermCamStr.toString();
     //jstring = permCamStr.object()<jstring>;
 
     /*
@@ -67,10 +69,10 @@ void CameraControllerX::callExternalCamera()
     QAndroidJniObject element = QAndroidJniObject::fromLocalRef(localRef);
     */
 
-    QAndroidJniObject permWriteExtStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
+    QAndroidJniObject JNIpermWriteExtStr = QAndroidJniObject::getStaticObjectField("android/Manifest$permission",
                                                                            "WRITE_EXTERNAL_STORAGE",
                                                                            "Ljava/lang/String;");
-
+    QString QTpermWriteExtStr = JNIpermWriteExtStr.toString();
 
     //jint permWriteExtStr_length = permWriteExtStr.callMethod<jint>("lenght");
 
@@ -84,14 +86,14 @@ void CameraControllerX::callExternalCamera()
     jobjectArray strArray = env->NewObjectArray(2, strClass, NULL);
 
     //??I might continue here some time
-    env->SetObjectArrayElement(strArray, 0, permWriteExtStr.object<jstring>());
-    env->SetObjectArrayElement(strArray, 1, permCamStr.object<jstring>());
+    env->SetObjectArrayElement(strArray, 0, JNIpermWriteExtStr.object<jstring>());
+    env->SetObjectArrayElement(strArray, 1, JNIpermCamStr.object<jstring>());
 
     //QAndroidJniObject permStrArr = QAndroidJniObject
 
 
-    qDebug()<<"This is returned: "<<permCamStr.toString();
-    qDebug()<<"This is returned: "<<permWriteExtStr.toString();
+    qDebug()<<"This is returned: "<<JNIpermCamStr.toString();
+    qDebug()<<"This is returned: "<<JNIpermWriteExtStr.toString();
     QAndroidJniObject::callStaticObjectMethod("java/util/Arrays", "toString", "([Ljava/lang/Object;)Ljava/lang/String;", strArray).toString();
 
     qDebug()<<"This is array   : "<<
@@ -101,17 +103,14 @@ void CameraControllerX::callExternalCamera()
 
 
 
-    //Kolla vad this är för objekt
-    //jobject =
 
-    qDebug()<<"BEFOREstatic";
-    QAndroidJniObject::callStaticMethod<void>("android/support/v4/app/ActivityCompat",
-                                   "requestPermissions",
-                                   "(Landroid/app/Activity;[Ljava/lang/String;I)V",
-                                   this, strArray, 17);
-    //CRASH HERE
-    //OOOOOOOOOOPS , I CAN USE QtAndroid::requestPermissions INSTEAD!!!!!!!
-    qDebug()<<"AFTERstatic";
+    QStringList QTstrArray;
+    QTstrArray.append(QTpermCamStr);
+    QTstrArray.append(QTpermWriteExtStr);
+
+    qDebug()<<"QTstrArray;!!! : "<< QTstrArray;
+
+    QtAndroid::requestPermissions(QTstrArray, nullptr); //Very bad to insert nullptr. But is a fulhack
 
 
     /*
@@ -188,6 +187,7 @@ void CameraControllerX::handleActivityResult(int receiverRequestCode, int result
 		QAndroidJniObject absPath = takePhotoSavedUri.callObjectMethod("getPath","()Ljava/lang/String;");
         qDebug() << __FUNCTION__ << "absPath.isValid()=" << absPath.isValid();
 
+        qDebug()<<"data.toString()!!!; " << data.toString();
 		m_imagePath = absPath.toString();
 		emit this->imagePathChanged();
 	}
