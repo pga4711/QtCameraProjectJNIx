@@ -33,7 +33,7 @@ public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtAc
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-
+        Log.d(TAG, "Enters StartCameraActivity.onCreate");
         Log.d(TAG, "getApplicationContext().getPackageName()!!: " + getApplicationContext().getPackageName());
 
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();

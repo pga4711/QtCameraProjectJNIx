@@ -6,14 +6,11 @@
 #include <QAndroidJniEnvironment>
 #include <CameraControllerX.h>
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-
 }
 
 MainWindow::~MainWindow()
@@ -24,7 +21,7 @@ MainWindow::~MainWindow()
 void MainWindow::invokeCCX()
 {
     ccx->callPhilipsActivityStarter(); //Calls a "pure" Android-java-"file".
-    //ccx->callExternalCamera();
+    //ccx->callExternalCamera(); //Too cluttery, too error prone right now?
 }
 
 void MainWindow::on_triggerActivityBtn_clicked()

@@ -24,7 +24,6 @@ private:
     Ui::MainWindow *ui;
     CameraControllerX *ccx = new CameraControllerX();
 
-
 };
 
 #endif // MAINWINDOW_H

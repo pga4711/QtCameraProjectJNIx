@@ -10,29 +10,21 @@
 
 void CameraControllerX::callPhilipsActivityStarter()
 {
-
-    //Gör en intent som ska starta StartCameraActivity.
-    //Android brukar vela ha var den är och vilket package den ligger i.
+    //Creating an intent that are going to start StartCameraActivity.
 
     int PHILIP_PHOTO = 2;
     qDebug()<<"Inside activity";
 
-
-    QAndroidJniObject intent2=QAndroidJniObject("android/content/Intent","()V");
+    QAndroidJniObject intent=QAndroidJniObject("android/content/Intent","()V");
 
     QAndroidJniObject packageName=QAndroidJniObject::fromString("com.vmi.cameratester");
     QAndroidJniObject className=QAndroidJniObject::fromString("com.vmi.cameratester.StartCameraActivity");
-    intent2.callObjectMethod("setClassName","(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;",
+    intent.callObjectMethod("setClassName","(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;",
                             packageName.object<jstring>(),
                             className.object<jstring>());
 
-
-    //VAD SKA JAG HA HÄR?
-    qDebug()<<"Before startActivity intent2.."; //Test for commiting, is my git crashing?
-
-    QtAndroid::startActivity(intent2, PHILIP_PHOTO, this);
-
-
+    qDebug()<<"Before startActivity intent2..";
+    QtAndroid::startActivity(intent, PHILIP_PHOTO, this);
 }
 
 void CameraControllerX::callExternalCamera()
@@ -58,7 +50,6 @@ void CameraControllerX::callExternalCamera()
     // flg=0x3 cmp=org.codeaurora.snapcam/com.android.camera.PhotoCamera
     // clip={text/uri-list U:file:///storage/emulated/0/camera.jpg} (has extras) }
     // from ProcessRecord{dd1e705 5630:com.vmi.cameratester/u0a250} (pid=5630, uid=10250) with revoked permission android.permission.CAMERA
-
 
 
 
@@ -108,14 +99,7 @@ void CameraControllerX::callExternalCamera()
                                                         "toString",
                                                         "([Ljava/lang/Object;)Ljava/lang/String;", strArray).toString();
 
-    //Hur anropar man getClass, getName på this
-    qDebug()<<"this-objectname"<<this->objectName();
 
-    QAndroidJniObject mainActivity = QtAndroid::androidActivity();
-    QAndroidJniObject gotClass = mainActivity.callObjectMethod("getClass", "()Ljava/lang/Class;");
-    QAndroidJniObject gotClassName = gotClass.callObjectMethod("getName", "()Ljava/lang/String;");
-
-    qDebug()<<"This is mainActivity !! classname: " << gotClassName.toString();
 
     //Kolla vad this är för objekt
     //jobject =
@@ -125,9 +109,9 @@ void CameraControllerX::callExternalCamera()
                                    "requestPermissions",
                                    "(Landroid/app/Activity;[Ljava/lang/String;I)V",
                                    this, strArray, 17);
+    //CRASH HERE
+    //OOOOOOOOOOPS , I CAN USE QtAndroid::requestPermissions INSTEAD!!!!!!!
     qDebug()<<"AFTERstatic";
-
-
 
 
     /*
