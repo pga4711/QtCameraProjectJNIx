@@ -22,7 +22,6 @@ public: //getters/setters
 public:
 
     void callPhilipsActivityStarter();
-
 	void callExternalCamera();    
 
 signals:

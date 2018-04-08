@@ -16,19 +16,22 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-
-    void setCCX(CameraControllerX inCcx);
+                //const QVariant &value
+    void setCCX(CameraControllerX &);
     void invokeCCX();
 
 private slots:
     void on_triggerActivityBtn_clicked();
+    void newUriArrived();
 
 
 private:
     Ui::MainWindow *ui;
-    CameraControllerX *ccx = new CameraControllerX();
-    //CameraControllerX ccxFromMain;
-    CameraControllerX ccxFromMain;
+
+    //CameraControllerX ccx;
+
+    CameraControllerX *ccxFromMain;
+    QString currentURI;
 };
 
 #endif // MAINWINDOW_H

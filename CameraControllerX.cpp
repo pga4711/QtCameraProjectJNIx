@@ -8,7 +8,6 @@
 
 #include <QDebug>
 
-
 void CameraControllerX::callPhilipsActivityStarter()
 {
     //Creating an intent that are going to start StartCameraActivity.
@@ -25,6 +24,7 @@ void CameraControllerX::callPhilipsActivityStarter()
                             className.object<jstring>());
 
     qDebug()<<"Before startActivity intent2..";
+
     QtAndroid::startActivity(intent, PHILIP_PHOTO, this);
 }
 
@@ -101,7 +101,10 @@ void CameraControllerX::callExternalCamera()
     qDebug() << __FUNCTION__ << "intent.isValid()=" << intent.isValid();
 
 	int SHOOT_PHOTO = 1;
-	QtAndroid::startActivity(intent, SHOOT_PHOTO, this);
+
+    QtAndroid::startActivity(intent, SHOOT_PHOTO, this);
+
+
 #endif
 
 }
@@ -109,11 +112,15 @@ void CameraControllerX::callExternalCamera()
 #ifdef Q_OS_ANDROID
 void CameraControllerX::handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject & data)
 {
+    qDebug()<<"inside handleActivityResult";
+    qDebug()<<"This is receiverRequestCode: "<<receiverRequestCode;
+    qDebug()<<"This is resultCode         : "<<resultCode;
 	int SHOOT_PHOTO = 1;
     int PHILIP_PHOTO = 2;
 	jint Activity__RESULT_OK = QAndroidJniObject::getStaticField<jint>(
 				"android.app.Activity", "RESULT_OK");
 
+    qDebug()<<"This is Activity__RESULT_OK: "<<Activity__RESULT_OK;
 	if ( receiverRequestCode == SHOOT_PHOTO && resultCode == Activity__RESULT_OK )
 	{
         qDebug() << "takePhotoSavedUri:" << takePhotoSavedUri.toString();
@@ -130,6 +137,17 @@ void CameraControllerX::handleActivityResult(int receiverRequestCode, int result
     {
         qDebug()<<"Returned from philip started activity";
 
+        QAndroidJniObject str = QAndroidJniObject::fromString("photoURI");
+
+        QString uri = data.callObjectMethod("getStringExtra",
+                              "(Ljava/lang/String;)Ljava/lang/String;",
+                              str.object<jstring>()).toString();
+        qDebug()<<"This was received IS IT URI? : "<<uri;
+
+        //Passing it the same way as Minixxie
+        m_imagePath=uri;
+        emit this->imagePathChanged();
     }
+
 }
 #endif

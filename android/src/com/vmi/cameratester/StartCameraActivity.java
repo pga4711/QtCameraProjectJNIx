@@ -39,7 +39,7 @@ public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtAc
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
         Log.d(TAG, "All threads: "+threadArray);
-
+        dispatchTakePictureIntent();
     }
     //Denna anropas alltid när en activity är typ klar. Den funkar osm ett slot i QT.
     @Override
@@ -49,7 +49,12 @@ public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtAc
             Log.d(TAG,"We arrived to read the file");
             Log.d(TAG,"This should be the lastCameraFileUri: "+ lastCameraFileUri);
             //och vad gör männskann här. När hen har fått tillbaka en bild. Jo
-            Log.d(TAG, "If we arrive here, we could focus on how to make use of uri");
+            Log.d(TAG, "If we arrive here, we could focus on how to make use of uri. funning finish()");
+
+            Intent output = new Intent();
+            output.putExtra("photoURI", lastCameraFileUri); //Send an uri back through the intent-extra-pipeline
+            setResult(RESULT_OK, output);
+            finish();
 
         } else if (requestCode == REQUEST_PERMISSIONS) {
             Log.d(TAG, "permission jox har körts");
@@ -76,9 +81,12 @@ public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtAc
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 //The getApplicationContext().getPackageName() should return com.vmi;
+                Log.d(TAG, "Before Uri photoURI...");
                 Uri photoURI = FileProvider.getUriForFile(this,
                         getApplicationContext().getPackageName() + ".fileprovider",
                         photoFile);
+                Log.d(TAG, "AFTER Uri photoURI...");
+
                 lastCameraFileUri = photoFile.toString();
                 Log.d(TAG, "photoFile.toString(): " + photoFile.toString());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
@@ -106,5 +114,21 @@ public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtAc
 
         return image;
     }
+
+
+  @Override
+  protected void onStop() {
+      Log.w(TAG, "Activity stopped");
+
+      super.onStop();
+  }
+
+  @Override
+  protected void onDestroy() {
+      Log.w(TAG, "Activity destroyed");
+
+      super.onDestroy();
+  }
+
 
 }

@@ -18,21 +18,30 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::setCCX(CameraControllerX inCcx)
+
+void MainWindow::setCCX(/*const ?*/ CameraControllerX &inCcx)
 {
-    //ccxFromMain=inCcx;//pass the reference i think is good
+    //I dont know the theory behind this referens passing, i have to stidy that actually.
+    ccxFromMain = &inCcx;  //Trying to pass the reference-value.
+    connect(ccxFromMain, SIGNAL(imagePathChanged()), this, SLOT(newUriArrived()));
 }
 
 void MainWindow::invokeCCX()
 {
-    ccx->callPhilipsActivityStarter();
-
+    //ccx.callPhilipsActivityStarter();
     //ccxFromMain.callExternalCamera();
-    //i can not do these yet, i forgot how it works with pointers and ampersand and references:
-    //ccxFromMain->callExternalCamera();
-}
 
+    ccxFromMain->callPhilipsActivityStarter();
+    qDebug()<<"end of incokeCCX";
+
+}
 void MainWindow::on_triggerActivityBtn_clicked()
 {
     invokeCCX();
+}
+
+void MainWindow::newUriArrived()
+{
+    qDebug()<<"Setting new uri onto label";
+    ui->uriLabel->setText(ccxFromMain->imagePath());
 }
