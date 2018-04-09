@@ -6,8 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;  //In gradle you need compile 'com.android.support:support-v4:25.3.1'
-//import android.app.Activity;
+import android.support.v4.content.FileProvider;  //In gradle you need "compile 'com.android.support:support-v4:25.3.1'"
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,10 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
-//public class StartCameraActivity extends Activity {
+//This is wrong: public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtActivity {
 
-//com.vmi.cameratester.StartCameraActivity
-public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtActivity {
+//This is right:
+public class StartCameraActivity extends Activity {
+
     private static final String TAG = StartCameraActivity.class.getName();
     public String lastCameraFileUri;
     static final int REQUEST_OPEN_CAMERA =1;
@@ -32,24 +33,20 @@ public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtAc
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-        Log.d(TAG, "Enters StartCameraActivity.onCreate");
-        Log.d(TAG, "getApplicationContext().getPackageName()!!: " + getApplicationContext().getPackageName());
 
-        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
-        Log.d(TAG, "All threads: "+threadArray);
-        dispatchTakePictureIntent();
+        Log.d(TAG, "Enters StartCameraActivity.onCreate");
+        Log.d(TAG, "getApplicationContext().getPackageName(): " + getApplicationContext().getPackageName());
+
+        dispatchTakePictureIntent();  //Den här har någon annan gjort och jag har modifierat den lite.
     }
+
     //Denna anropas alltid när en activity är typ klar. Den funkar osm ett slot i QT.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if  (requestCode == REQUEST_OPEN_CAMERA) {
-            Log.d(TAG,"We arrived to read the file");
-            Log.d(TAG,"This should be the lastCameraFileUri: "+ lastCameraFileUri);
-            //och vad gör männskann här. När hen har fått tillbaka en bild. Jo
-            Log.d(TAG, "If we arrive here, we could focus on how to make use of uri. funning finish()");
+
+            Log.d(TAG,"This is the lastCameraFileUri: "+ lastCameraFileUri);
 
             Intent output = new Intent();
             output.putExtra("photoURI", lastCameraFileUri); //Send an uri back through the intent-extra-pipeline
@@ -81,14 +78,13 @@ public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtAc
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 //The getApplicationContext().getPackageName() should return com.vmi;
-                Log.d(TAG, "Before Uri photoURI...");
+
                 Uri photoURI = FileProvider.getUriForFile(this,
                         getApplicationContext().getPackageName() + ".fileprovider",
                         photoFile);
-                Log.d(TAG, "AFTER Uri photoURI...");
 
                 lastCameraFileUri = photoFile.toString();
-                Log.d(TAG, "photoFile.toString(): " + photoFile.toString());
+
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_OPEN_CAMERA);
 
@@ -102,16 +98,17 @@ public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtAc
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-        String imageFileName = "XBalancer" + timeStamp;
+        String imageFileName = "XBalancer" + timeStamp + "_";
 
         //Here we get the path where all pictures are stored
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
-        Log.d(TAG, "This is storageDir.toString() : " + storageDir.toString());
-
+        Log.d(TAG, "imageFileName: " + imageFileName);
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        Log.d(TAG, "This is image.toString()      : " + image.toString());
+        //           File.createTempFile(String suffix, String suffix, File directory);
+        //           File               (
 
+        Log.d(TAG, "image.toString(): " + image.toString());
         return image;
     }
 

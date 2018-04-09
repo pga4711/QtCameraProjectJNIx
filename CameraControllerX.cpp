@@ -104,7 +104,6 @@ void CameraControllerX::callExternalCamera()
 
     QtAndroid::startActivity(intent, SHOOT_PHOTO, this);
 
-
 #endif
 
 }
@@ -113,14 +112,12 @@ void CameraControllerX::callExternalCamera()
 void CameraControllerX::handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject & data)
 {
     qDebug()<<"inside handleActivityResult";
-    qDebug()<<"This is receiverRequestCode: "<<receiverRequestCode;
-    qDebug()<<"This is resultCode         : "<<resultCode;
 	int SHOOT_PHOTO = 1;
     int PHILIP_PHOTO = 2;
 	jint Activity__RESULT_OK = QAndroidJniObject::getStaticField<jint>(
 				"android.app.Activity", "RESULT_OK");
 
-    qDebug()<<"This is Activity__RESULT_OK: "<<Activity__RESULT_OK;
+
 	if ( receiverRequestCode == SHOOT_PHOTO && resultCode == Activity__RESULT_OK )
 	{
         qDebug() << "takePhotoSavedUri:" << takePhotoSavedUri.toString();
@@ -128,7 +125,6 @@ void CameraControllerX::handleActivityResult(int receiverRequestCode, int result
 		QAndroidJniObject absPath = takePhotoSavedUri.callObjectMethod("getPath","()Ljava/lang/String;");
         qDebug() << __FUNCTION__ << "absPath.isValid()=" << absPath.isValid();
 
-        qDebug()<<"data.toString()!!!; " << data.toString();
 		m_imagePath = absPath.toString();
 		emit this->imagePathChanged();
 	}
@@ -142,7 +138,7 @@ void CameraControllerX::handleActivityResult(int receiverRequestCode, int result
         QString uri = data.callObjectMethod("getStringExtra",
                               "(Ljava/lang/String;)Ljava/lang/String;",
                               str.object<jstring>()).toString();
-        qDebug()<<"This was received IS IT URI? : "<<uri;
+        qDebug()<<"This was received URI: "<<uri;
 
         //Passing it the same way as Minixxie
         m_imagePath=uri;

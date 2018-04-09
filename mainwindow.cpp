@@ -18,7 +18,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
 void MainWindow::setCCX(/*const ?*/ CameraControllerX &inCcx)
 {
     //I dont know the theory behind this referens passing, i have to stidy that actually.
@@ -28,12 +27,7 @@ void MainWindow::setCCX(/*const ?*/ CameraControllerX &inCcx)
 
 void MainWindow::invokeCCX()
 {
-    //ccx.callPhilipsActivityStarter();
-    //ccxFromMain.callExternalCamera();
-
     ccxFromMain->callPhilipsActivityStarter();
-    qDebug()<<"end of incokeCCX";
-
 }
 void MainWindow::on_triggerActivityBtn_clicked()
 {

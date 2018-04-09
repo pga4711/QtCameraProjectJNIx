@@ -28,8 +28,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    //CameraControllerX ccx;
-
     CameraControllerX *ccxFromMain;
     QString currentURI;
 };
