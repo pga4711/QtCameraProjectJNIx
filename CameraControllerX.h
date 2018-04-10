@@ -2,6 +2,8 @@
 #define __CAMERA_CONTROLLER_X_H__
 
 #include <QObject>
+#include <QDebug>
+
 #ifdef Q_OS_ANDROID
 	#include <QAndroidActivityResultReceiver>
 #endif
@@ -16,20 +18,19 @@ class CameraControllerX : public QObject
 	
 private:
 	QString m_imagePath;
-public: //getters/setters
+public:
 	const QString& imagePath() const { return this->m_imagePath; }
 
 public:
 
-    void callPhilipsActivityStarter();
-	void callExternalCamera();    
+    void callPhilipsActivityStarter(); 
 
 signals:
-	void imagePathChanged();
+    void imagePathChanged();
 
 private:
 #ifdef Q_OS_ANDROID
-	QAndroidJniObject takePhotoSavedUri;
+
 	void handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject & data);
 #endif
 

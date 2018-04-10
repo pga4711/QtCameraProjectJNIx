@@ -23,7 +23,7 @@ import java.util.Set;
 //This is wrong: public class StartCameraActivity extends org.qtproject.qt5.android.bindings.QtActivity {
 
 //This is right:
-public class StartCameraActivity extends Activity {
+public class StartCameraActivity extends android.app.Activity {
 
     private static final String TAG = StartCameraActivity.class.getName();
     public String lastCameraFileUri;
@@ -36,6 +36,9 @@ public class StartCameraActivity extends Activity {
 
         Log.d(TAG, "Enters StartCameraActivity.onCreate");
         Log.d(TAG, "getApplicationContext().getPackageName(): " + getApplicationContext().getPackageName());
+
+
+
 
         dispatchTakePictureIntent();  //Den här har någon annan gjort och jag har modifierat den lite.
     }
@@ -98,15 +101,14 @@ public class StartCameraActivity extends Activity {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-        String imageFileName = "XBalancer" + timeStamp + "_";
+        String imageFileName = "XBalancer" + timeStamp;
 
         //Here we get the path where all pictures are stored
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
+        File image = new File(storageDir, imageFileName + ".jpg");
+
         Log.d(TAG, "imageFileName: " + imageFileName);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        //           File.createTempFile(String suffix, String suffix, File directory);
-        //           File               (
 
         Log.d(TAG, "image.toString(): " + image.toString());
         return image;
