@@ -24,7 +24,6 @@ private slots:
     void on_triggerActivityBtn_clicked();
     void newUriArrived();
 
-
 private:
     Ui::MainWindow *ui;
 

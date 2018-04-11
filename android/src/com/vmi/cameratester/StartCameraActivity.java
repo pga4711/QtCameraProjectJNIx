@@ -9,11 +9,9 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;  //In gradle you need "compile 'com.android.support:support-v4:25.3.1'"
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.net.Uri;
-import android.widget.ImageView;
+import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -28,7 +26,6 @@ public class StartCameraActivity extends android.app.Activity {
     private static final String TAG = StartCameraActivity.class.getName();
     public String lastCameraFileUri;
     static final int REQUEST_OPEN_CAMERA =1;
-    static final int REQUEST_PERMISSIONS = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,9 +33,6 @@ public class StartCameraActivity extends android.app.Activity {
 
         Log.d(TAG, "Enters StartCameraActivity.onCreate");
         Log.d(TAG, "getApplicationContext().getPackageName(): " + getApplicationContext().getPackageName());
-
-
-
 
         dispatchTakePictureIntent();  //Den här har någon annan gjort och jag har modifierat den lite.
     }
@@ -49,18 +43,29 @@ public class StartCameraActivity extends android.app.Activity {
 
         if  (requestCode == REQUEST_OPEN_CAMERA) {
 
-            Log.d(TAG,"This is the lastCameraFileUri: "+ lastCameraFileUri);
+            //Check if file exists
+            File presumptiveFile = new File(lastCameraFileUri);
+
+            Log.d(TAG, "lastCameraFileUri          : " + lastCameraFileUri);
+            Log.d(TAG, "presumptiveFile.toString() : " + presumptiveFile.toString());
+            Log.d(TAG, "Does it exists?            : " + presumptiveFile.exists());
 
             Intent output = new Intent();
-            output.putExtra("photoURI", lastCameraFileUri); //Send an uri back through the intent-extra-pipeline
+
+            if (presumptiveFile.exists())
+                output.putExtra("photoURI", lastCameraFileUri); //Send an uri back through the intent-extra-pipeline
+            else
+                output.putExtra("photoURI", "NO PHOTO WAS TAKEN");
+
             setResult(RESULT_OK, output);
             finish();
 
-        } else if (requestCode == REQUEST_PERMISSIONS) {
-            Log.d(TAG, "permission jox har körts");
+        }
+        else
+        {
+            Log.d(TAG, "This will never print?");
         }
     }
-
     //This will start up the Native OEM-camera
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -83,8 +88,7 @@ public class StartCameraActivity extends android.app.Activity {
                 //The getApplicationContext().getPackageName() should return com.vmi;
 
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        getApplicationContext().getPackageName() + ".fileprovider",
-                        photoFile);
+                        getApplicationContext().getPackageName() + ".fileprovider", photoFile);
 
                 lastCameraFileUri = photoFile.toString();
 

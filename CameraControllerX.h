@@ -22,7 +22,7 @@ public:
 	const QString& imagePath() const { return this->m_imagePath; }
 
 public:
-
+    bool grantPermission();
     void callPhilipsActivityStarter(); 
 
 signals:
@@ -30,7 +30,6 @@ signals:
 
 private:
 #ifdef Q_OS_ANDROID
-
 	void handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject & data);
 #endif
 
